@@ -13,7 +13,10 @@ namespace NanoTube.Core
 		/// <value>	The key. </value>
 		public string Key { get; set; }
 		
-		/// <summary>	Gets or sets the value. </summary>
+		/// <summary>
+		/// Gets or sets the value.  In the case of StatSite this will be treated as a Duration value.  In the case of StatsD this will be
+		/// treated as a Counter Adjustment value.
+		/// </summary>
 		/// <value>	The value. </value>
 		public double Value { get; set; }
 		
