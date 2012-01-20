@@ -6,7 +6,7 @@
 	public sealed class SimpleObjectPool<T>
 		where T : class
 	{
-		private Stack<T> pool;
+		private readonly Stack<T> pool;
 		public SimpleObjectPool(int capacity, Func<SimpleObjectPool<T>, T> constructor)
 		{
 			this.pool = new Stack<T>(capacity);
@@ -15,7 +15,6 @@
 				this.pool.Push(constructor(this));
 			}
 		}
-
 
 		//TODO: consider using a millisecond timeout here
 		public T Pop()
