@@ -17,6 +17,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{5C3FCF31-F09D-4915-A60F-A1D570B642A2}"
+	ProjectSection(SolutionItems) = preProject
+		NanoTube\NanoTube.nuspec = NanoTube\NanoTube.nuspec
+		NuGetPack.ps1 = NuGetPack.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

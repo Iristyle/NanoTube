@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>Ethan Brown</authors>
+    <owners>$author$</owners>
+    <summary>Opensource .NET toolkit for passing metric data to Graphite via StatsD or StatSite</summary>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>Initial release</releaseNotes>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Configuration" targetFramework="net40-client, net40" />
+    </frameworkAssemblies>
+    <projectUrl>https://github.com/EastPoint/NanoTube</projectUrl>
+    <licenseUrl>https://github.com/EastPoint/NanoTube/blob/master/LICENSE.md</licenseUrl>
+    <iconUrl>https://github.com/EastPoint/NanoTube/raw/master/logo-128.png</iconUrl>
+    <tags>Graphite StatsD StatSite Metrics Udp Client Fast Toolkit</tags>
+    <language>en-US</language>
+    <copyright>East Point Systems 2012 and contributors</copyright>
+  </metadata>
+</package>
