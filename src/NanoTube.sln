@@ -11,6 +11,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{78F841
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{3E7B15BF-656D-426E-8542-B83578275C04}"
+	ProjectSection(SolutionItems) = preProject
+		..\LICENSE.md = ..\LICENSE.md
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,7 +36,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		CodeStyleEnforcer_Active = 0
 		CodeStyleEnforcer_RulesLocation = 
+		CodeStyleEnforcer_Active = 0
 	EndGlobalSection
 EndGlobal
