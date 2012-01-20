@@ -12,7 +12,6 @@
 	/// A class that performs Udp communications with a remote host.  It can either Send metrics data all in one shot, or it can stream a
 	/// specific number of packets at a time over an infinite IEnumerable.
 	/// </summary>
-	/// <remarks>	1/19/2012. </remarks>
 	public class UdpMessenger : IDisposable
 	{		
 		private readonly static SimpleObjectPool<SocketAsyncEventArgs> _eventArgsPool 

@@ -6,7 +6,6 @@ namespace NanoTube.Net
 	using System.Text;
 
 	/// <summary>	A helper class for turning a list of strings into a Udp packet.  </summary>
-	/// <remarks>	1/19/2012. </remarks>
 	public static class PacketBuilder
 	{
 		private static byte[] _terminator = Encoding.UTF8.GetBytes("\n");

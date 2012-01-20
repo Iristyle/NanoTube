@@ -9,7 +9,6 @@ namespace NanoTube
 	public static class MetricExtensions
 	{
 		/// <summary>	Lazy converts a list of metrics to strings based on the given MetricFormat. </summary>
-		/// <remarks>	1/19/2012. </remarks>
 		/// <param name="metrics">	The metrics to act on. </param>
 		/// <param name="format"> 	Describes the format to use. </param>
 		/// <returns>	An enumerator that allows foreach to be used to process the strings in this collection. </returns>
@@ -22,7 +21,6 @@ namespace NanoTube
 		}
 
 		/// <summary>	An IMetric extension method that converts a given metric value into a string representation based on the given MetricFormat. </summary>
-		/// <remarks>	1/19/2012. </remarks>
 		/// <param name="metric">	The metric to act on. </param>
 		/// <param name="format">	Describes the format to use. </param>
 		/// <returns>	A string representation of this object. </returns>
