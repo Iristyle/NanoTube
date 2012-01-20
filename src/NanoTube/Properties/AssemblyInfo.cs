@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("NanoTube")]
-[assembly: AssemblyDescription("Provides a simple API for sending statistics information to a Graphite compatible Udp listener like StatsD or StatSite")]
+[assembly: AssemblyDescription("NanoTube is a simple .NET based client for shipping off metrics and statistical data to a UDP based Graphite listener, such as StatsD or StatSite.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("East Point Systems, Inc. http://www.eastpointsystems.com/")]
 [assembly: AssemblyProduct("NanoTube")]
