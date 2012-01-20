@@ -5,20 +5,35 @@ namespace NanoTube.Configuration
 	using System.Configuration;
 	using System.Linq;
 
+	/// <summary>	Metric publishing configuration.  </summary>
 	public class MetricPublishingConfiguration : ConfigurationSection, IMetricPublishingConfiguration
 	{
-		public static IMetricPublishingConfiguration FromConfig(string section = "NanoTubePublishing")
+		/// <summary>	Reads from the default configuration section named nanoTubePublishing. </summary>
+		/// <returns>	An IMetricPublishingConfiguration instance. </returns>
+		public static IMetricPublishingConfiguration FromConfig()
+		{
+			return (MetricPublishingConfiguration)ConfigurationManager.GetSection("nanoTubePublishing");
+		}
+
+		/// <summary>	Reads from the a custom named configuration section. </summary>
+		/// <param name="section">	The section name. </param>
+		/// <returns>	An IMetricPublishingConfiguration instance. </returns>
+		public static IMetricPublishingConfiguration FromConfig(string section)
 		{
 			return (MetricPublishingConfiguration)ConfigurationManager.GetSection(section);
 		}
 
-		[ConfigurationProperty("server", IsRequired = true)]
-		public string Server 
+		/// <summary>	Gets or sets the server hostName. </summary>
+		/// <value>	The server hostName. </value>
+		[ConfigurationProperty("hostName", IsRequired = true)]
+		public string HostName 
 		{
-			get { return (string)this["server"]; }
-			set { this["server"] = value; }
+			get { return (string)this["hostName"]; }
+			set { this["hostName"] = value; }
 		}
 
+		/// <summary>	Gets or sets the port. </summary>
+		/// <value>	The port. </value>
 		[ConfigurationProperty("port", DefaultValue = 8125, IsRequired = false)]
 		public int Port 
 		{
@@ -26,12 +41,23 @@ namespace NanoTube.Configuration
 			set { this["port"] = value; }
 		}
 
+		/// <summary>	Gets or sets the prefix key. </summary>
+		/// <value>	The prefix key. </value>
 		[ConfigurationProperty("prefixKey", DefaultValue = "", IsRequired = false)]
 		[RegexStringValidator(@"^[^!\s;:/\.\(\)\\#%\$\^]+$|^$")]
 		public string PrefixKey 
 		{
 			get { return (string)this["prefixKey"]; }
 			set { this["prefixKey"] = value; }
+		}
+
+		/// <summary>	Gets or sets the format to use. </summary>
+		/// <value>	The format. </value>
+		[ConfigurationProperty("format", IsRequired = true)]
+		public MetricFormat Format
+		{
+			get { return (MetricFormat)this["format"]; }
+			set { this["format"] = value; }
 		}
 	}
 }
