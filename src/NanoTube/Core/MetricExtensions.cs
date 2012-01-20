@@ -84,7 +84,7 @@ namespace NanoTube
 			else if (t == typeof(Timing))
 			{
 				Timing timing = (Timing)metric;
-				return String.Format("{0}:{1:0.###}|ms", timing.Key, timing.Elapsed);
+				return String.Format("{0}:{1:0.###}|ms", timing.Key, timing.Duration);
 			}
 			else if (t == typeof(Counter))
 			{
@@ -131,7 +131,7 @@ namespace NanoTube
 			else if (t == typeof(Timing))
 			{
 				Timing timing = (Timing)metric;
-				return String.Format("{0}:{1:0.###}|ms", timing.Key, timing.Elapsed);
+				return String.Format("{0}:{1:0.###}|ms", timing.Key, timing.Duration);
 			}
 
 			Sample sample = (Sample)metric; //last option

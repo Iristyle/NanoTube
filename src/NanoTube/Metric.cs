@@ -68,7 +68,7 @@ namespace NanoTube
 		{
 			if (!key.IsValidKey()) { throw new ArgumentException("Key contains invalid characters", "key"); }
 			
-			return new Timing() { Key = key, Elapsed = elapsed };
+			return new Timing() { Key = key, Duration = elapsed };
 		}
 
 		/// <summary>	Creates a KeyValue metric. </summary>

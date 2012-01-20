@@ -9,8 +9,8 @@ namespace NanoTube.Core
 		/// <value>	The key. </value>
 		public string Key { get; set; }
 		
-		/// <summary>	Gets or sets the elapsed time value.  Units are not specified. </summary>
+		/// <summary>	Gets or sets the duration time value.  Units are not specified. </summary>
 		/// <value>	The elapsed. </value>
-		public double Elapsed { get; set; }
+		public double Duration { get; set; }
 	}
 }
