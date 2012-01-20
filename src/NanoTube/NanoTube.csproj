@@ -57,6 +57,7 @@
     <Compile Include="Core\MetricExtensions.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Metric.cs" />
     <Compile Include="MetricClient.cs" />
     <Compile Include="MetricFormat.cs" />
