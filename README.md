@@ -13,7 +13,7 @@ Designed for compatibility with a StatsD style listener, such as:
 
 The preferred method of using the library is to install via [NuGet](http://nuget.org).
 
-<div><p><code style="background-color: #202020; border: 4px solid #c0c0c0; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; box-shadow: 2px 2px 3px #6e6e6e; color: #e2e2e2; display:block; font: 1.5em 'andale mono', 'lucida console', monospace; line-height: 1.5em; overflow: auto; padding: 15px;">PM&gt; Install-Package NanoTube</code></p></div>
+<div><p><code>PM&gt; Install-Package NanoTube</code></p></div>
 
 ### Requirements
 
@@ -52,6 +52,8 @@ Stream will batch up the list of Metrics into 10 packet chunks by default.  This
 MetricClient.Stream("foo.bar.com", 8125, MetricFormat.StatSite, "prefix", GetSomeInfiniteIEnumerableMetric())
 ```
 
+Note that both Send and Stream still use Async sockets and will return to the caller fast, but that calling Send on an infinite ```IEnumerable<IMetric>``` will likely blow up your process.
+
 #### Time
 Provides a means to high-resolution time an arbitrary `Action` and push the timing result to the server.
 
@@ -65,6 +67,8 @@ The `MetricClient` can also be constructed.  In this mode, the `UdpMessenger` po
 
 The instance of MetricClient supports `Send` and `Stream` methods which behave identically to the static methods mentioned above.
 
+Send will materialize the metrics if they're not already and send them at once.
+
 ```csharp
 using (var client = new MetricClient("foo.bar.com", 8125, MetricFormat.StatSite, "prefix"))
 {
@@ -72,6 +76,8 @@ using (var client = new MetricClient("foo.bar.com", 8125, MetricFormat.StatSite,
 	client.Send(new [] { Metric.Counter("name", 50) });
 }
 ```
+
+Stream will keep reading from the IEnumerable as long as its publishing.
 
 ```csharp
 using (var client = new MetricClient("foo.bar.com", 8125, MetricFormat.StatSite, "prefix"))
