@@ -1,4 +1,5 @@
-# NanoTube
+![Logo](https://github.com/EastPoint/NanoTube/raw/master/logo-128.png)
+# NanoTube 
 A .NET based client library for publishing metrics to Graphite through a StatsD or StatSite listener, designed with performance in mind.
 
 After [PerfTap](https://github.com/EastPoint/PerfTap) was put together, it became apparent that it would be useful to factor out the Udp messaging bits to it's own library.  On top of that, a new simple client API was cooked up that accepts simple POCOs that map to the metrics that StatSite and StatsD can accept.
