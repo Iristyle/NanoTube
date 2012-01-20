@@ -9,32 +9,51 @@ namespace NanoTube
 	public static class MetricExtensions
 	{
 		/// <summary>	Lazy converts a list of metrics to strings based on the given MetricFormat. </summary>
+		/// <exception cref="ArgumentNullException">	Thrown when the metrics are null. </exception>
+		/// <exception cref="ArgumentException">		Thrown when the key is invalid. </exception>
 		/// <param name="metrics">	The metrics to act on. </param>
+		/// <param name="key">	  	The optional key to prefix metrics with. </param>
 		/// <param name="format"> 	Describes the format to use. </param>
 		/// <returns>	An enumerator that allows foreach to be used to process the strings in this collection. </returns>
-		public static IEnumerable<string> ToStrings(this IEnumerable<IMetric> metrics, MetricFormat format)
+		public static IEnumerable<string> ToStrings(this IEnumerable<IMetric> metrics, string key, MetricFormat format)
 		{
+			if (null == metrics) { throw new ArgumentNullException("metrics"); }
+			if (!key.IsValidKey()) { throw new ArgumentException("contains invalid characters", "key"); }
+
 			foreach (var metric in metrics)
 			{
-				yield return metric.ToString(format);
+				yield return metric.ToString(key, format);
 			}
 		}
 
-		/// <summary>	An IMetric extension method that converts a given metric value into a string representation based on the given MetricFormat. </summary>
+		/// <summary>
+		/// An IMetric extension method that converts a given metric value into a string representation based on the given MetricFormat.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">	Thrown when the metric is null. </exception>
+		/// <exception cref="ArgumentException">		Thrown when the key is invalid. </exception>
 		/// <param name="metric">	The metric to act on. </param>
+		/// <param name="key">   	The optional key to prefix metrics with. </param>
 		/// <param name="format">	Describes the format to use. </param>
 		/// <returns>	A string representation of this object. </returns>
-		public static string ToString(this IMetric metric, MetricFormat format)
+		public static string ToString(this IMetric metric, string key, MetricFormat format)
 		{
+			if (null == metric) { throw new ArgumentNullException("metrics"); }
+			if (!key.IsValidKey()) { throw new ArgumentException("contains invalid characters", "key"); }
+
+			string converted = null;
 			switch (format)
 			{
 				case MetricFormat.StatSite:
-					return metric.ToStatSiteString();
-
+					converted = metric.ToStatSiteString();
+					break;
+				
 				case MetricFormat.StatsD:
 				default:
-					return metric.ToStatsDString();
+					converted = metric.ToStatsDString();
+					break;
 			}
+
+			return string.IsNullOrEmpty(key) ? converted : string.Format("{0}.{1}", key, converted);
 		}
 
 		//https://github.com/etsy/statsd
