@@ -76,13 +76,13 @@ namespace NanoTube
 		/// 										Linux file systems). </exception>
 		/// <param name="key">			The key. </param>
 		/// <param name="@value">   	The value. </param>
-		/// <param name="timeStamp">	The time at which the value was read.  Note that this has no bearing on StatsD and is only used by Statsite. </param>
+		/// <param name="timestamp">	The time at which the value was read.  Note that this has no bearing on StatsD and is only used by Statsite. </param>
 		/// <returns>	A new KeyValue object. </returns>
-		public static KeyValue KeyValue(string key, double @value, DateTime timeStamp)
+		public static KeyValue KeyValue(string key, double @value, DateTime timestamp)
 		{
 			if (!key.IsValidKey()) { throw new ArgumentException("Key contains invalid characters", "key"); }
 
-			return new KeyValue() { Key = key, Value = @value, TimeStamp = timeStamp };
+			return new KeyValue() { Key = key, Value = @value, Timestamp = timestamp };
 		}
 	}
 }

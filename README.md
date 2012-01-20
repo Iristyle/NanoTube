@@ -22,7 +22,7 @@ The preferred method of using the library is to install via [NuGet](http://nuget
 
 ### Counter Types
 
-* `KeyValue` - This generally speaking matches a moment in time reading of a value, although the TimeStamp is optional.  StatSite has support for passing along such values, but StatsD does not.  These metrics are pushed to StatsD exactly like a Timing.
+* `KeyValue` - This generally speaking matches a moment in time reading of a value, although the Timestamp is optional.  StatSite has support for passing along such values, but StatsD does not.  These metrics are pushed to StatsD exactly like a Timing.
 * `Timing` - Represents an elapsed amount of time, attached to a key, with no particular unit.  
 * `Sample` - This is a value reading where the read frequency may be specified as a <1 value.  For instance, 1/10th is represented as 0.1.  For StatsD, this is treated as a Counter Adjustment value.  For StatSite, this is treated as a Timing.
 * `Counter` - Represents adjustments made to a named server-side counter.  The adjustment value may be positive or negative.
