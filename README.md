@@ -38,7 +38,7 @@ The `MetricClient` class has two operating modes.  There are a number of static 
 #### Send
 Send will materialize the entire list of Metrics passed in.  This is useful when you know you want to send all metrics together, for instance when all metrics have been read at the same time and have no timestamps attached.  Metrics will be concatenated together into the smallest number of 512 byte UDP packets as possible.
 
-** Never use this method with an infinite Metrics enumerable. **
+**Never use this method with an infinite Metrics enumerable.**
 
 ```csharp
 MetricClient.Send("foo.bar.com", 8125, MetricFormat.StatSite, "prefix", new [] { Metric.Counter("name", 50) })
