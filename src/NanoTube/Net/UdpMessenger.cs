@@ -2,9 +2,10 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Diagnostics.CodeAnalysis;
 	using System.Linq;
-	using System.Net.Sockets;
 	using System.Net;
+	using System.Net.Sockets;
 	using Collections;
 	using Linq;
 
@@ -17,7 +18,7 @@
 		private readonly static SimpleObjectPool<SocketAsyncEventArgs> _eventArgsPool 
 			= new SimpleObjectPool<SocketAsyncEventArgs>(30, pool => new PoolAwareSocketAsyncEventArgs(pool));
 		private readonly int _port;
-		private readonly string _hostname;
+		private readonly string _hostName;
 		private readonly UdpClient _client;
 		private bool _disposed;
 
@@ -26,9 +27,9 @@
 		/// </summary>
 		/// <param name="server"></param>
 		/// <param name="port"></param>
-		public UdpMessenger(string hostname, int port)
+		public UdpMessenger(string hostName, int port)
 		{
-			_hostname = hostname;
+			_hostName = hostName;
 			_port = port;
 			_client = new UdpClient();
 			_client.Client.SendBufferSize = 0;
@@ -65,6 +66,7 @@
 		/// StreamMetrics to let the messenger Chunk() on your behalf.
 		/// </remarks>
 		/// <param name="metrics">	The metrics. </param>
+		[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification="This is one of the rare cases where eating exceptions is OK")]
 		public void SendMetrics(IEnumerable<string> metrics)
 		{
 			var data = _eventArgsPool.Pop();
@@ -73,7 +75,7 @@
 
 			try
 			{
-				data.RemoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(_hostname)[0], _port);
+				data.RemoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(_hostName)[0], _port);
 				data.SendPacketsElements = metrics.ToMaximumBytePackets()
 					.Select(bytes => new SendPacketsElement(bytes, 0, bytes.Length, true))
 					.ToArray();
@@ -110,6 +112,7 @@
 		/// </remarks>
 		/// <param name="metrics">		 	The metrics. </param>
 		/// <param name="packetsPerSend">	Size of the chunk. </param>
+		[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "This is one of the rare cases where eating exceptions is OK")]
 		public void StreamMetrics(IEnumerable<string> metrics, int packetsPerSend)
 		{
 			foreach (var chunk in metrics.ToMaximumBytePackets().Chunk(packetsPerSend))
@@ -120,7 +123,7 @@
 
 				try
 				{
-					data.RemoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(_hostname)[0], _port);
+					data.RemoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(_hostName)[0], _port);
 					data.SendPacketsElements = chunk
 						.Select(bytes => new SendPacketsElement(bytes, 0, bytes.Length, true))
 						.ToArray();

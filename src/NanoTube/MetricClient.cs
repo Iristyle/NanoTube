@@ -4,6 +4,7 @@
 	using System.Collections.Concurrent;
 	using System.Collections.Generic;
 	using System.Diagnostics;
+	using System.Globalization;
 	using System.Linq;
 	using Collections;
 	using Core;
@@ -28,17 +29,17 @@
 		private bool _disposed;
 
 		/// <summary>	Initializes a new instance of the MetricClient class. </summary>
-		/// <exception cref="ArgumentException">	Thrown when the hostname is null or empty OR the key contains invalid characters. </exception>
-		/// <param name="hostname">	The DNS hostname of the server. </param>
+		/// <exception cref="ArgumentException">	Thrown when the hostName is null or empty OR the key contains invalid characters. </exception>
+		/// <param name="hostName">	The DNS hostName of the server. </param>
 		/// <param name="port">	   	The port. </param>
 		/// <param name="key">	   	The optional key to prefix metrics with. </param>
 		/// <param name="format">  	Describes the metric format to use. </param>
-		public MetricClient(string hostname, int port, string key, MetricFormat format)
+		public MetricClient(string hostName, int port, string key, MetricFormat format)
 		{
-			if (string.IsNullOrEmpty(hostname)) { throw new ArgumentException("cannot be null or empty", "hostname"); }
+			if (string.IsNullOrEmpty(hostName)) { throw new ArgumentException("cannot be null or empty", "hostName"); }
 			if (!key.IsValidKey()) { throw new ArgumentException("contains invalid characters", "key"); }
 
-			_messenger = new UdpMessenger(hostname, port);
+			_messenger = new UdpMessenger(hostName, port);
 			_key = key;
 			_format = format;
 		}
@@ -71,54 +72,54 @@
 		/// Will send the given metrics in the specified format.  The IEnumerable will be materialized, and all data will be sent together
 		/// asynchronously.  This call is not appropriate if the IEnumerable is infinite.
 		/// </summary>
-		/// <exception cref="ArgumentException">		Thrown when the hostname is null or empty OR the key contains invalid characters. </exception>
+		/// <exception cref="ArgumentException">		Thrown when the hostName is null or empty OR the key contains invalid characters. </exception>
 		/// <exception cref="ArgumentNullException">	Thrown when the metrics are null. </exception>
-		/// <param name="hostname">	The DNS hostname of the server. </param>
+		/// <param name="hostName">	The DNS hostName of the server. </param>
 		/// <param name="port">	   	The port. </param>
 		/// <param name="format">  	Describes the metric format to use. </param>
 		/// <param name="key">	   	The optional key to prefix metrics with. </param>
 		/// <param name="metrics"> 	The metrics. </param>
-		public static void Send(string hostname, int port, MetricFormat format, string key, IEnumerable<IMetric> metrics)
+		public static void Send(string hostName, int port, MetricFormat format, string key, IEnumerable<IMetric> metrics)
 		{
-			if (string.IsNullOrEmpty(hostname)) { throw new ArgumentException("cannot be null or empty", "hostname"); }
+			if (string.IsNullOrEmpty(hostName)) { throw new ArgumentException("cannot be null or empty", "hostName"); }
 			if (!key.IsValidKey()) { throw new ArgumentException("contains invalid characters", "key"); }
 			if (null == metrics) { throw new ArgumentNullException("metrics"); }
 
-			SendToServer(hostname, port, metrics.ToStrings(key, format), false);
+			SendToServer(hostName, port, metrics.ToStrings(key, format), false);
 		}
 
 		/// <summary>
 		/// Will stream the given metrics in the specified format, breaking up the metrics into 10 packets at a time, where multiple metrics may
 		/// comprise a single packet.  This call is appropriate for infinite IEnumerables.
 		/// </summary>
-		/// <exception cref="ArgumentException">		Thrown when the hostname is null or empty OR the key contains invalid characters. </exception>
+		/// <exception cref="ArgumentException">		Thrown when the hostName is null or empty OR the key contains invalid characters. </exception>
 		/// <exception cref="ArgumentNullException">	Thrown when the metrics are null. </exception>
-		/// <param name="hostname">	The DNS hostname of the server. </param>
+		/// <param name="hostName">	The DNS hostName of the server. </param>
 		/// <param name="port">	   	The port. </param>
 		/// <param name="format">  	Describes the metric format to use. </param>
 		/// <param name="key">	   	The optional key to prefix metrics with. </param>
 		/// <param name="metrics"> 	The metrics. </param>
-		public static void Stream(string hostname, int port, MetricFormat format, string key, IEnumerable<IMetric> metrics)
+		public static void Stream(string hostName, int port, MetricFormat format, string key, IEnumerable<IMetric> metrics)
 		{
-			if (string.IsNullOrEmpty(hostname)) { throw new ArgumentException("cannot be null or empty", "hostname"); }
+			if (string.IsNullOrEmpty(hostName)) { throw new ArgumentException("cannot be null or empty", "hostName"); }
 			if (!key.IsValidKey()) { throw new ArgumentException("contains invalid characters", "key"); }
 			if (null == metrics) { throw new ArgumentNullException("metrics"); }
 
-			SendToServer(hostname, port, metrics.ToStrings(key, format), true);
+			SendToServer(hostName, port, metrics.ToStrings(key, format), true);
 		}
 
 		/// <summary>	Times a given Action and reports it as a Timing metrics to the server. </summary>
 		/// <remarks>	Exceptions generated by the Action are not handled. </remarks>
-		/// <exception cref="ArgumentException">		Thrown when the hostname is null or empty OR the key contains invalid characters. </exception>
+		/// <exception cref="ArgumentException">		Thrown when the hostName is null or empty OR the key contains invalid characters. </exception>
 		/// <exception cref="ArgumentNullException">	Thrown when the action is null. </exception>
-		/// <param name="hostname">	The DNS hostname of the server. </param>
+		/// <param name="hostName">	The DNS hostName of the server. </param>
 		/// <param name="port">	   	The port. </param>
 		/// <param name="format">  	Describes the metric format to use. </param>
 		/// <param name="key">	   	The optional key to prefix metrics with. </param>
 		/// <param name="action">  	The action. </param>
-		public static void Time(string hostname, int port, MetricFormat format, string key, Action action)
+		public static void Time(string hostName, int port, MetricFormat format, string key, Action action)
 		{
-			if (string.IsNullOrEmpty(hostname)) { throw new ArgumentException("cannot be null or empty", "hostname"); }
+			if (string.IsNullOrEmpty(hostName)) { throw new ArgumentException("cannot be null or empty", "hostName"); }
 			if (!key.IsValidKey()) { throw new ArgumentException("contains invalid characters", "key"); }
 			if (null == action) { throw new ArgumentNullException("action"); }
 
@@ -134,7 +135,7 @@
 				if (null != timer)
 				{
 					timer.Stop();
-					SendToServer(hostname, port, new[] { Metric.Timing(key, timer.Elapsed.TotalSeconds).ToString(null, format) }, false);
+					SendToServer(hostName, port, new[] { Metric.Timing(key, timer.Elapsed.TotalSeconds).ToString(null, format) }, false);
 				}
 			}
 		}
@@ -146,7 +147,7 @@
 
 			try
 			{
-				serverPool = _messengerPool.GetOrAdd(string.Format("{0}:{1}", server, port),
+				serverPool = _messengerPool.GetOrAdd(string.Format(CultureInfo.InvariantCulture, "{0}:{1}", server, port),
 					new SimpleObjectPool<UdpMessenger>(3, pool => new UdpMessenger(server, port)));
 				messenger = serverPool.Pop();
 

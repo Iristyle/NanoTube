@@ -2,6 +2,7 @@ namespace NanoTube
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Globalization;
 	using System.Linq;
 	using Core;
 	using Support;
@@ -37,7 +38,7 @@ namespace NanoTube
 		/// <returns>	A string representation of this object. </returns>
 		public static string ToString(this IMetric metric, string key, MetricFormat format)
 		{
-			if (null == metric) { throw new ArgumentNullException("metrics"); }
+			if (null == metric) { throw new ArgumentNullException("metric"); }
 			if (!key.IsValidKey()) { throw new ArgumentException("contains invalid characters", "key"); }
 
 			string converted = null;
@@ -53,7 +54,7 @@ namespace NanoTube
 					break;
 			}
 
-			return string.IsNullOrEmpty(key) ? converted : string.Format("{0}.{1}", key, converted);
+			return string.IsNullOrEmpty(key) ? converted : string.Format(CultureInfo.InvariantCulture, "{0}.{1}", key, converted);
 		}
 
 		//https://github.com/etsy/statsd
@@ -77,23 +78,23 @@ namespace NanoTube
 			Type t = metric.GetType();
 			if (t == typeof(KeyValue))
 			{
-				//TODO: 1-19-2012 - this may be entirely wrong - we need to find a statsd to test against
+				//TODO: 1-19-2012 - this may be entirely wrong - we need to find a statsd to test against - eat timestamp
 				KeyValue keyValue = (KeyValue)metric;
-				return string.Format("{0}:{1:0.###}|ms", keyValue.Key, keyValue.Value, keyValue.TimeStamp.HasValue ? keyValue.TimeStamp.Value.AsUnixTime().ToString() : string.Empty);
+				return string.Format(CultureInfo.InvariantCulture, "{0}:{1:0.###}|ms", keyValue.Key, keyValue.Value);
 			}
 			else if (t == typeof(Timing))
 			{
 				Timing timing = (Timing)metric;
-				return String.Format("{0}:{1:0.###}|ms", timing.Key, timing.Duration);
+				return string.Format(CultureInfo.InvariantCulture, "{0}:{1:0.###}|ms", timing.Key, timing.Duration);
 			}
 			else if (t == typeof(Counter))
 			{
 				Counter counter = (Counter)metric;
-				return String.Format("{0}:{1}|c", counter.Key, counter.Adjustment);
+				return string.Format(CultureInfo.InvariantCulture, "{0}:{1}|c", counter.Key, counter.Adjustment);
 			}
 			
 			Sample sample = (Sample)metric; //last option
-			return String.Format("{0}:{1:0.###}|c|@{2:f}", sample.Key, sample.Value, sample.Frequency);
+			return string.Format(CultureInfo.InvariantCulture, "{0}:{1:0.###}|c|@{2:f}", sample.Key, sample.Value, sample.Frequency);
 		}
 
 		//https://github.com/kiip/statsite
@@ -117,25 +118,25 @@ namespace NanoTube
 			if (t == typeof(KeyValue))
 			{
 				KeyValue keyValue = (KeyValue)metric;
-				if (keyValue.TimeStamp.HasValue)
+				if (keyValue.Timestamp.HasValue)
 				{
-					return string.Format("{0}:{1:0.###}|kv|@{2}", keyValue.Key, keyValue.Value, keyValue.TimeStamp.Value.AsUnixTime());
+					return string.Format(CultureInfo.InvariantCulture, "{0}:{1:0.###}|kv|@{2}", keyValue.Key, keyValue.Value, keyValue.Timestamp.Value.AsUnixTime());
 				}
-				return string.Format("{0}:{1:0.###}|kv", keyValue.Key, keyValue.Value);
+				return string.Format(CultureInfo.InvariantCulture, "{0}:{1:0.###}|kv", keyValue.Key, keyValue.Value);
 			}
 			else if (t == typeof(Counter))
 			{
 				Counter counter = (Counter)metric;
-				return String.Format("{0}:{1}|c", counter.Key, counter.Adjustment);
+				return string.Format(CultureInfo.InvariantCulture, "{0}:{1}|c", counter.Key, counter.Adjustment);
 			}
 			else if (t == typeof(Timing))
 			{
 				Timing timing = (Timing)metric;
-				return String.Format("{0}:{1:0.###}|ms", timing.Key, timing.Duration);
+				return string.Format(CultureInfo.InvariantCulture, "{0}:{1:0.###}|ms", timing.Key, timing.Duration);
 			}
 
 			Sample sample = (Sample)metric; //last option
-			return String.Format("{0}:{1:0.###}|c|@{2:f}", sample.Key, sample.Value, sample.Frequency);
+			return string.Format(CultureInfo.InvariantCulture, "{0}:{1:0.###}|c|@{2:f}", sample.Key, sample.Value, sample.Frequency);
 		}
 	}
 }
