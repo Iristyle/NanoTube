@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NanoTube", "NanoTube\NanoTube.csproj", "{F02996AF-EA6D-4C8A-B8D6-29E99A4A0FA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NanoTube.Tests", "..\tests\NanoTube.Tests\NanoTube.Tests.csproj", "{CBE8CD44-1B3E-4D68-9687-93D81A12CD7D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{78F84126-6AAE-4552-BD76-75B9E4BD3859}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F02996AF-EA6D-4C8A-B8D6-29E99A4A0FA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F02996AF-EA6D-4C8A-B8D6-29E99A4A0FA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F02996AF-EA6D-4C8A-B8D6-29E99A4A0FA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F02996AF-EA6D-4C8A-B8D6-29E99A4A0FA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBE8CD44-1B3E-4D68-9687-93D81A12CD7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBE8CD44-1B3E-4D68-9687-93D81A12CD7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBE8CD44-1B3E-4D68-9687-93D81A12CD7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBE8CD44-1B3E-4D68-9687-93D81A12CD7D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		CodeStyleEnforcer_Active = 0
+		CodeStyleEnforcer_RulesLocation = 
+	EndGlobalSection
+EndGlobal
