@@ -7,6 +7,7 @@ namespace NanoTube
 	using Core;
 	using Support;
 
+	/// <summary>	A set of extension methods on IMetric to generate properly formatted strings.  </summary>
 	public static class MetricExtensions
 	{
 		/// <summary>	Lazy converts a list of metrics to strings based on the given MetricFormat. </summary>

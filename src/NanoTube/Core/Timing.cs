@@ -36,7 +36,7 @@ namespace NanoTube.Core
 		/// <summary>	Indicates whether this instance and a specified object are equal. </summary>
 		/// <param name="other">	The counter to compare to this object. </param>
 		/// <returns>
-		/// true if <paramref name="obj" /> and this instance are the same type and represent the same value; otherwise, false.
+		/// true if <paramref name="other" /> and this instance are the same type and represent the same value; otherwise, false.
 		/// </returns>
 		public bool Equals(Timing other)
 		{

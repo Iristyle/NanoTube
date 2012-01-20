@@ -22,11 +22,9 @@
 		private readonly UdpClient _client;
 		private bool _disposed;
 
-		/// <summary>
-		/// Initializes a new instance of the UdpMessenger class.
-		/// </summary>
-		/// <param name="server"></param>
-		/// <param name="port"></param>
+		/// <summary>	Initializes a new instance of the UdpMessenger class. </summary>
+		/// <param name="hostName">	The DNS hostName of the server. </param>
+		/// <param name="port">	   	The server port. </param>
 		public UdpMessenger(string hostName, int port)
 		{
 			_hostName = hostName;

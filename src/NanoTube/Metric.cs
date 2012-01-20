@@ -5,6 +5,7 @@ namespace NanoTube
 	using System.Linq;
 	using Core;
 
+	/// <summary>	A simple factory for building Metric instances.  </summary>
 	public static class Metric
 	{
 		/// <summary>	Generates a Counter metric. </summary>
@@ -46,7 +47,7 @@ namespace NanoTube
 		/// 												invalid on Linux file systems). </exception>
 		/// <exception cref="ArgumentOutOfRangeException">	Thrown when the sampling rate is greater than 1. </exception>
 		/// <param name="key">			The key. </param>
-		/// <param name="@value">   	The value. </param>
+		/// <param name="value">   	The value. </param>
 		/// <param name="frequency">	The frequency of the sampling that must be less than 1.  0.1 represents the value being sampled at 1/10th
 		/// 							the rate for instance. </param>
 		/// <returns>	A new Sample object. </returns>
@@ -75,7 +76,7 @@ namespace NanoTube
 		/// <exception cref="ArgumentException">	Thrown when the key contains invalid characters (essentially characters that are invalid on
 		/// 										Linux file systems). </exception>
 		/// <param name="key">			The key. </param>
-		/// <param name="@value">   	The value. </param>
+		/// <param name="value">   	The value. </param>
 		/// <param name="timestamp">	The time at which the value was read.  Note that this has no bearing on StatsD and is only used by Statsite. </param>
 		/// <returns>	A new KeyValue object. </returns>
 		public static KeyValue KeyValue(string key, double @value, DateTime timestamp)
