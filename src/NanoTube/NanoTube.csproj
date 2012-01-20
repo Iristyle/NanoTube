@@ -50,6 +50,7 @@
     <Compile Include="Core\MetricExtensions.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Metric.cs" />
     <Compile Include="MetricFormat.cs" />
     <Compile Include="Support\DateTimeExtensions.cs" />
     <Compile Include="Core\IMetric.cs" />
