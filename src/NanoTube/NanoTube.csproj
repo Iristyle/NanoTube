@@ -44,6 +44,9 @@
     <Compile Include="Configuration\IMetricPublishingConfiguration.cs" />
     <Compile Include="Configuration\MetricPublishingConfiguration.cs" />
     <Compile Include="Core\Counter.cs" />
+    <Compile Include="Core\KeyHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Core\MetricExtensions.cs">
       <SubType>Code</SubType>
     </Compile>
