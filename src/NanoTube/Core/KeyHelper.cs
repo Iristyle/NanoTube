@@ -2,6 +2,7 @@ namespace NanoTube
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Diagnostics.CodeAnalysis;
 	using System.Linq;
 	using System.Text;
 	using System.Text.RegularExpressions;
@@ -26,6 +27,7 @@ namespace NanoTube
 		/// <summary>	A string extension method that will sanitize a key name so that it may be used with a metric. </summary>
 		/// <param name="key">	The key to act on. </param>
 		/// <returns>	A new string that has been sanitized if necessary, otherwise the original key . </returns>
+		[SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0", Justification = "IsValidKey is validating key")]
 		public static string Sanitize(this string key)
 		{
 			if (IsValidKey(key)) { return key; }
