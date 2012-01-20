@@ -43,13 +43,19 @@
   <ItemGroup>
     <Compile Include="Configuration\IMetricPublishingConfiguration.cs" />
     <Compile Include="Configuration\MetricPublishingConfiguration.cs" />
+    <Compile Include="Core\Counter.cs" />
+    <Compile Include="MetricFormat.cs" />
     <Compile Include="Support\DateTimeExtensions.cs" />
+    <Compile Include="Core\IMetric.cs" />
+    <Compile Include="Core\KeyValue.cs" />
     <Compile Include="Linq\LinqExtensions.cs" />
     <Compile Include="Net\PacketBuilder.cs" />
     <Compile Include="Net\PoolAwareSocketAsyncEventArgs.cs" />
     <Compile Include="Net\UdpMessenger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Collections\SimpleObjectPool.cs" />
+    <Compile Include="Core\Sample.cs" />
+    <Compile Include="Core\Timing.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
