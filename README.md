@@ -13,7 +13,7 @@ Designed for compatibility with a StatsD style listener, such as:
 
 The preferred method of using the library is to install via [NuGet](http://nuget.org).
 
-<div><p><code>PM&gt; Install-Package NanoTube</code></p></div>
+![Badge](https://github.com/EastPoint/NanoTube/raw/master/nuget-badge.png)
 
 ### Requirements
 
