@@ -13,7 +13,7 @@ namespace NanoTube
 		/// <param name="key">   	The counter name. </param>
 		/// <param name="adjustment">	The amount to add to or subtract from the counter value. </param>
 		/// <returns>	A new Counter object. </returns>
-		public static Counter Counter(string key, int adjustment)
+		public static ICounter Counter(string key, int adjustment)
 		{
 			if (!key.IsValidKey()) { throw new ArgumentException("Key contains invalid characters", "key"); }
 
@@ -24,7 +24,7 @@ namespace NanoTube
 		/// <exception cref="ArgumentException">	Thrown when the key contains invalid characters (essentially characters that are invalid on Linux file systems). </exception>
 		/// <param name="key">   	The counter name. </param>
 		/// <returns>	A new Counter object. </returns>
-		public static Counter Increment(string key)
+		public static ICounter Increment(string key)
 		{
 			if (!key.IsValidKey()) { throw new ArgumentException("Key contains invalid characters", "key"); }
 
@@ -35,7 +35,7 @@ namespace NanoTube
 		/// <exception cref="ArgumentException">	Thrown when the key contains invalid characters (essentially characters that are invalid on Linux file systems). </exception>
 		/// <param name="key">   	The counter name. </param>
 		/// <returns>	A new Counter object. </returns>
-		public static Counter Decrement(string key)
+		public static ICounter Decrement(string key)
 		{
 			if (!key.IsValidKey()) { throw new ArgumentException("Key contains invalid characters", "key"); }
 
@@ -51,7 +51,7 @@ namespace NanoTube
 		/// <param name="frequency">	The frequency of the sampling that must be less than 1.  0.1 represents the value being sampled at 1/10th
 		/// 							the rate for instance. </param>
 		/// <returns>	A new Sample object. </returns>
-		public static Sample Sample(string key, int @value, double frequency)
+		public static ISample Sample(string key, int @value, double frequency)
 		{
 			if (!key.IsValidKey()) { throw new ArgumentException("Key contains invalid characters", "key"); }
 			if (frequency > 1) { throw new ArgumentOutOfRangeException("frequency", "Frequency must be < 1"); }
@@ -65,7 +65,7 @@ namespace NanoTube
 		/// <param name="key">	  	The key. </param>
 		/// <param name="elapsed">	The elapsed time, which is not unit specific. </param>
 		/// <returns>	A new Timing object. </returns>
-		public static Timing Timing(string key, double elapsed)
+		public static ITiming Timing(string key, double elapsed)
 		{
 			if (!key.IsValidKey()) { throw new ArgumentException("Key contains invalid characters", "key"); }
 			
@@ -79,7 +79,7 @@ namespace NanoTube
 		/// <param name="value">   	The value. </param>
 		/// <param name="timestamp">	The time at which the value was read.  Note that this has no bearing on StatsD and is only used by Statsite. </param>
 		/// <returns>	A new KeyValue object. </returns>
-		public static KeyValue KeyValue(string key, double @value, DateTime timestamp)
+		public static IKeyValue KeyValue(string key, double @value, DateTime timestamp)
 		{
 			if (!key.IsValidKey()) { throw new ArgumentException("Key contains invalid characters", "key"); }
 
