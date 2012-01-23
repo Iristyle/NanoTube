@@ -59,5 +59,14 @@ namespace NanoTube.Configuration
 			get { return (MetricFormat)this["format"]; }
 			set { this["format"] = value; }
 		}
+
+		/// <summary>	Gets a value indicating whether exceptions will be thrown from the internals. </summary>
+		/// <value>	true to throw exceptions, false if not. </value>
+		[ConfigurationProperty("throwExceptions", IsRequired = false, DefaultValue = false)]
+		public bool ThrowExceptions
+		{
+			get { return (bool)this["throwExceptions"]; }
+			set { this["throwExceptions"] = value; }
+		}
 	}
 }
