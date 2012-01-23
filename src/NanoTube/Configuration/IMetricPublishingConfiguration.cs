@@ -7,9 +7,9 @@ namespace NanoTube.Configuration
 	/// <summary>	Interface for metric publishing configuration.  </summary>
 	public interface IMetricPublishingConfiguration
 	{
-		/// <summary>	Gets the server hostName. </summary>
-		/// <value>	The server hostName. </value>
-		string HostName { get; }
+		/// <summary>	Gets the server DNS hostName or IPv4 or IPv6 address. </summary>
+		/// <value>	The server hostName or address. </value>
+		string HostNameOrAddress { get; }
 		
 		/// <summary>	Gets the port. </summary>
 		/// <value>	The port. </value>

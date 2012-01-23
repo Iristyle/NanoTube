@@ -23,13 +23,13 @@ namespace NanoTube.Configuration
 			return (MetricPublishingConfiguration)ConfigurationManager.GetSection(section);
 		}
 
-		/// <summary>	Gets or sets the server hostName. </summary>
-		/// <value>	The server hostName. </value>
-		[ConfigurationProperty("hostName", IsRequired = true)]
-		public string HostName 
+		/// <summary>	Gets or sets the server DNS hostName or IPv4 or IPv6 address. </summary>
+		/// <value>	The server hostName or address. </value>
+		[ConfigurationProperty("hostNameOrAddress", IsRequired = true)]
+		public string HostNameOrAddress 
 		{
-			get { return (string)this["hostName"]; }
-			set { this["hostName"] = value; }
+			get { return (string)this["hostNameOrAddress"]; }
+			set { this["hostNameOrAddress"] = value; }
 		}
 
 		/// <summary>	Gets or sets the port. </summary>

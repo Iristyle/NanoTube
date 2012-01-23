@@ -112,7 +112,6 @@ To keep down memory utilization, and improve performance:
 * A raw Graphite client that doesn't go through StatsD/StatSite first
 * Verification of Mono support
 * Better configuration file error checking
-* IP Support in addition to hostnames
 
 ## Contributing
 

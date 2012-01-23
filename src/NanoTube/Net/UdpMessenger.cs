@@ -18,19 +18,27 @@
 		private readonly static SimpleObjectPool<SocketAsyncEventArgs> _eventArgsPool 
 			= new SimpleObjectPool<SocketAsyncEventArgs>(30, pool => new PoolAwareSocketAsyncEventArgs(pool));
 		private readonly int _port;
-		private readonly string _hostName;
+		private readonly string _hostNameOrAddress;
 		private readonly UdpClient _client;
 		private bool _disposed;
+		private readonly IPEndPoint _ipBasedEndpoint;
 
 		/// <summary>	Initializes a new instance of the UdpMessenger class. </summary>
-		/// <param name="hostName">	The DNS hostName of the server. </param>
+		/// <param name="hostNameOrAddress">	The DNS hostName or IPv4 or IPv6 address of the server. </param>
 		/// <param name="port">	   	The server port. </param>
-		public UdpMessenger(string hostName, int port)
+		public UdpMessenger(string hostNameOrAddress, int port)
 		{
-			_hostName = hostName;
+			_hostNameOrAddress = hostNameOrAddress;
 			_port = port;
 			_client = new UdpClient();
 			_client.Client.SendBufferSize = 0;
+
+			//if we were given an IP instead of a hostname, we can happily cache it off
+			IPAddress address;
+			if (IPAddress.TryParse(hostNameOrAddress, out address))
+			{
+				_ipBasedEndpoint = new IPEndPoint(address, _port);
+			}
 		}
 
 		/// <summary>	Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources. </summary>
@@ -73,7 +81,7 @@
 
 			try
 			{
-				data.RemoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(_hostName)[0], _port);
+				data.RemoteEndPoint = _ipBasedEndpoint ?? new IPEndPoint(Dns.GetHostAddresses(_hostNameOrAddress)[0], _port); //only DNS resolve if we were given a hostname
 				data.SendPacketsElements = metrics.ToMaximumBytePackets()
 					.Select(bytes => new SendPacketsElement(bytes, 0, bytes.Length, true))
 					.ToArray();
@@ -121,7 +129,7 @@
 
 				try
 				{
-					data.RemoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(_hostName)[0], _port);
+					data.RemoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(_hostNameOrAddress)[0], _port);
 					data.SendPacketsElements = chunk
 						.Select(bytes => new SendPacketsElement(bytes, 0, bytes.Length, true))
 						.ToArray();
