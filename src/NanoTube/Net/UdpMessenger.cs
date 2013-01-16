@@ -14,8 +14,8 @@
 	/// specific number of packets at a time over an infinite IEnumerable.
 	/// </summary>
 	public class UdpMessenger : IDisposable
-	{		
-		private readonly static SimpleObjectPool<SocketAsyncEventArgs> _eventArgsPool 
+	{
+		private readonly static SimpleObjectPool<SocketAsyncEventArgs> _eventArgsPool
 			= new SimpleObjectPool<SocketAsyncEventArgs>(30, pool => new PoolAwareSocketAsyncEventArgs(pool));
 		private readonly int _port;
 		private readonly string _hostNameOrAddress;
@@ -81,11 +81,17 @@
 
 			try
 			{
-				data.RemoteEndPoint = _ipBasedEndpoint ?? new IPEndPoint(Dns.GetHostAddresses(_hostNameOrAddress)[0], _port); //only DNS resolve if we were given a hostname
+				data.RemoteEndPoint = _ipBasedEndpoint ??
+					//only DNS resolve if we were given a hostname
+					new IPEndPoint(Dns.GetHostAddresses(_hostNameOrAddress)[0], _port);
 				data.SendPacketsElements = metrics.ToMaximumBytePackets()
 					.Select(bytes => new SendPacketsElement(bytes, 0, bytes.Length, true))
 					.ToArray();
 
+				if(!_client.Client.Connected)
+				{
+					_client.Client.Connect(data.RemoteEndPoint);
+				}
 				//_client.Client.NoDelay = true;
 				_client.Client.SendPacketsAsync(data);
 
