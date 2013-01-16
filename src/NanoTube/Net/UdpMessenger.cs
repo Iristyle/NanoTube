@@ -39,6 +39,10 @@
 			{
 				_ipBasedEndpoint = new IPEndPoint(address, _port);
 			}
+			else
+			{
+        _ipBasedEndpoint = new IPEndPoint(Dns.GetHostAddresses(_hostNameOrAddress)[0], _port);
+			}
 		}
 
 		/// <summary>	Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources. </summary>
@@ -81,11 +85,15 @@
 
 			try
 			{
-				data.RemoteEndPoint = _ipBasedEndpoint ?? new IPEndPoint(Dns.GetHostAddresses(_hostNameOrAddress)[0], _port); //only DNS resolve if we were given a hostname
+			  data.RemoteEndPoint = _ipBasedEndpoint;
 				data.SendPacketsElements = metrics.ToMaximumBytePackets()
 					.Select(bytes => new SendPacketsElement(bytes, 0, bytes.Length, true))
 					.ToArray();
 
+        if(!_client.Client.Connected)
+        {
+          _client.Client.Connect(_ipBasedEndpoint);
+        }
 				//_client.Client.NoDelay = true;
 				_client.Client.SendPacketsAsync(data);
 
