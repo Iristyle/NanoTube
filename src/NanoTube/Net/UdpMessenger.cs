@@ -17,27 +17,54 @@
 	{		
 		private readonly static SimpleObjectPool<SocketAsyncEventArgs> _eventArgsPool 
 			= new SimpleObjectPool<SocketAsyncEventArgs>(30, pool => new PoolAwareSocketAsyncEventArgs(pool));
-		private readonly int _port;
 		private readonly string _hostNameOrAddress;
+		private readonly int _port;
+		private readonly bool _throwExceptions;
 		private readonly UdpClient _client;
 		private bool _disposed;
 		private readonly IPEndPoint _ipBasedEndpoint;
 
 		/// <summary>	Initializes a new instance of the UdpMessenger class. </summary>
+		/// <remarks>
+		/// Will not throw if the host name is not a valid host or IP address. Will not throw if the metrics being sent through Send are null, or
+		/// there are other problems parsing said metrics.  Will still throw if the metrics given to Stream are null.
+		/// </remarks>
 		/// <param name="hostNameOrAddress">	The DNS hostName or IPv4 or IPv6 address of the server. </param>
-		/// <param name="port">	   	The server port. </param>
+		/// <param name="port">					The server port. </param>
+		/// <exception cref="ArgumentException">	Thrown when the hostNameOrAddress is null or whitespace. </exception>
 		public UdpMessenger(string hostNameOrAddress, int port)
+			: this(hostNameOrAddress, port, false)
+		{ }
+
+		/// <summary>	Initializes a new instance of the UdpMessenger class. </summary>
+		/// <exception cref="ArgumentException">	Thrown when the hostNameOrAddress is null or whitespace. </exception>
+		/// <param name="hostNameOrAddress">	The DNS hostName or IPv4 or IPv6 address of the server. </param>
+		/// <param name="port">					The server port. </param>
+		/// <param name="throwExceptions">  	true to throw exceptions if the given hostName cannot be resolved, if the metrics being passed to
+		/// 									the Send operation are invalid, or if there are other problems parsing said metrics. </param>
+		/// <exception cref="SocketException">	Thrown when the hostNameOrAddress is not an IP address and cannot be resolved, only if
+		/// 										throwExceptions is set to true. </exception>
+		public UdpMessenger(string hostNameOrAddress, int port, bool throwExceptions)
 		{
+			if (string.IsNullOrWhiteSpace(hostNameOrAddress)) { throw new ArgumentException("cannot be null or whitespace", "hostNameOrAddress"); }
+
 			_hostNameOrAddress = hostNameOrAddress;
 			_port = port;
+			_throwExceptions = throwExceptions;
+
 			_client = new UdpClient();
 			_client.Client.SendBufferSize = 0;
 
-			//if we were given an IP instead of a hostname, we can happily cache it off
+			//if we were given an IP instead of a hostName, we can happily cache it off
 			IPAddress address;
 			if (IPAddress.TryParse(hostNameOrAddress, out address))
 			{
-				_ipBasedEndpoint = new IPEndPoint(address, _port);
+				_ipBasedEndpoint = new IPEndPoint(address, port);
+			}
+			else if (throwExceptions)
+			{
+				//this will throw on bad input - fail fast
+				Dns.GetHostAddresses(hostNameOrAddress);
 			}
 		}
 
@@ -71,10 +98,15 @@
 		/// not appropriate for use in streaming from an infinite IEnumerable, unless the stream is first batched up using .Chunk().  Use
 		/// StreamMetrics to let the messenger Chunk() on your behalf.
 		/// </remarks>
+		/// <exception cref="ArgumentNullException">	Thrown when the metrics are null, only if throwExceptions was set in the constructor. </exception>
+		/// <exception cref="SocketException">	Thrown when the hostNameOrAddress is not an IP address and cannot be resolved, only if
+		/// 										throwExceptions is set to true. </exception>
 		/// <param name="metrics">	The metrics. </param>
 		[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification="This is one of the rare cases where eating exceptions is OK")]
 		public void SendMetrics(IEnumerable<string> metrics)
 		{
+			if (_throwExceptions && null == metrics) { throw new ArgumentNullException("metrics"); }
+
 			var data = _eventArgsPool.Pop();
 			//firehose alert! -- keep it moving!
 			if (null == data) { return; }
@@ -93,7 +125,9 @@
 			}
 			//fire and forget, so just eat intermittent failures / exceptions
 			catch
-			{ }
+			{ 
+				if (_throwExceptions) { throw; }
+			}
 		}
 
 		/// <summary>	Streams the given metrics in the IEnumerable, terminating when the IEnumerable does. </summary>
@@ -103,9 +137,14 @@
 		/// SocketAsyncEventArgs in the pool, it will discard the current number of specified packets. This method is *not* appropriate if all
 		/// metrics should be sent immediately in one shot. Use SendMetrics for that use case.
 		/// </remarks>
+		/// <exception cref="ArgumentNullException">	Thrown when the metrics are null. </exception>
+		/// <exception cref="SocketException">	Thrown when the hostNameOrAddress is not an IP address and cannot be resolved, only if
+		/// 										throwExceptions is set to true. </exception>
 		/// <param name="metrics">	The metrics. </param>
 		public void StreamMetrics(IEnumerable<string> metrics)
 		{
+			if (null == metrics) { throw new ArgumentNullException("metrics"); }
+
 			StreamMetrics(metrics, 10);
 		}
 
@@ -116,31 +155,46 @@
 		/// infinite. If there are no available SocketAsyncEventArgs in the pool, it will discard the current number of specified packets. This
 		/// method is *not* appropriate if all metrics should be sent immediately in one shot. Use SendMetrics for that use case.
 		/// </remarks>
+		/// <exception cref="ArgumentNullException">	Thrown when the metrics are null. </exception>
+		/// <exception cref="SocketException">	Thrown when the hostNameOrAddress is not an IP address and cannot be resolved, only if
+		/// 										throwExceptions is set to true. </exception>
 		/// <param name="metrics">		 	The metrics. </param>
 		/// <param name="packetsPerSend">	Size of the chunk. </param>
 		[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "This is one of the rare cases where eating exceptions is OK")]
 		public void StreamMetrics(IEnumerable<string> metrics, int packetsPerSend)
 		{
-			foreach (var chunk in metrics.ToMaximumBytePackets().Chunk(packetsPerSend))
+			if (null == metrics) { throw new ArgumentNullException("metrics"); }
+
+			try
 			{
-				var data = _eventArgsPool.Pop();
-				//firehose alert! -- keep it moving!
-				if (null == data) { continue; }
-
-				try
+				foreach (var chunk in metrics.ToMaximumBytePackets().Chunk(packetsPerSend))
 				{
-					data.RemoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(_hostNameOrAddress)[0], _port);
-					data.SendPacketsElements = chunk
-						.Select(bytes => new SendPacketsElement(bytes, 0, bytes.Length, true))
-						.ToArray();
+					var data = _eventArgsPool.Pop();
+					//firehose alert! -- keep it moving!
+					if (null == data) { continue; }
 
-					_client.Client.SendPacketsAsync(data);
+					try
+					{
+						data.RemoteEndPoint = _ipBasedEndpoint ?? new IPEndPoint(Dns.GetHostAddresses(_hostNameOrAddress)[0], _port);
+						data.SendPacketsElements = chunk
+							.Select(bytes => new SendPacketsElement(bytes, 0, bytes.Length, true))
+							.ToArray();
 
-					//Write-Debug "Wrote $(byteBlock.length) bytes to $server:$port"
+						_client.Client.SendPacketsAsync(data);
+
+						//Write-Debug "Wrote $(byteBlock.length) bytes to $server:$port"
+					}
+					//fire and forget, so just eat intermittent send / dns resolution failures if applicable OR other exceptions, unless instructed to throw
+					catch
+					{
+						if (_throwExceptions) { throw; }
+					}
 				}
-				//fire and forget, so just eat intermittent failures / exceptions
-				catch
-				{ }
+			}
+			catch
+			{
+				//problems with the current chunk
+				if (_throwExceptions) { throw; }
 			}
 		}
 	}
