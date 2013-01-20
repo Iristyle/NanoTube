@@ -1,19 +1,19 @@
 namespace NanoTube.Core
 {
 	using System;
-
+	
 	/// <summary>	Represents a Key/Value pair that is passed directly to Graphite. This has a very specific mapping in StatSite, but
 	/// 			in StatsD is treated similarly to a Timing.  Timestamp has no mapping in StatsD.</summary>
-	public struct KeyValue : IMetric
+	internal struct KeyValue : IKeyValue
 	{
 		/// <summary>	Gets or sets the key name. </summary>
 		/// <value>	The key. </value>
 		public string Key { get; set; }
-		
+
 		/// <summary>	Gets or sets the value. </summary>
 		/// <value>	The value. </value>
 		public double Value { get; set; }
-		
+
 		/// <summary>	Gets or sets an optional Timestamp.  Meaningless to StatsD, but used by StatSite. </summary>
 		/// <value>	The time stamp. </value>
 		public DateTime? Timestamp { get; set; }

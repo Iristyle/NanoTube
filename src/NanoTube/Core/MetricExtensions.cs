@@ -80,21 +80,21 @@ namespace NanoTube
 			if (t == typeof(KeyValue))
 			{
 				//TODO: 1-19-2012 - this may be entirely wrong - we need to find a statsd to test against - eat timestamp
-				KeyValue keyValue = (KeyValue)metric;
+				IKeyValue keyValue = (IKeyValue)metric;
 				return string.Format(CultureInfo.InvariantCulture, "{0}:{1:0.###}|ms", keyValue.Key, keyValue.Value);
 			}
 			else if (t == typeof(Timing))
 			{
-				Timing timing = (Timing)metric;
+				ITiming timing = (ITiming)metric;
 				return string.Format(CultureInfo.InvariantCulture, "{0}:{1:0.###}|ms", timing.Key, timing.Duration);
 			}
 			else if (t == typeof(Counter))
 			{
-				Counter counter = (Counter)metric;
+				ICounter counter = (ICounter)metric;
 				return string.Format(CultureInfo.InvariantCulture, "{0}:{1}|c", counter.Key, counter.Adjustment);
 			}
 			
-			Sample sample = (Sample)metric; //last option
+			ISample sample = (ISample)metric; //last option
 			return string.Format(CultureInfo.InvariantCulture, "{0}:{1:0.###}|c|@{2:f}", sample.Key, sample.Value, sample.Frequency);
 		}
 
@@ -118,7 +118,7 @@ namespace NanoTube
 			Type t = metric.GetType();
 			if (t == typeof(KeyValue))
 			{
-				KeyValue keyValue = (KeyValue)metric;
+				IKeyValue keyValue = (IKeyValue)metric;
 				if (keyValue.Timestamp.HasValue)
 				{
 					return string.Format(CultureInfo.InvariantCulture, "{0}:{1:0.###}|kv|@{2}", keyValue.Key, keyValue.Value, keyValue.Timestamp.Value.AsUnixTime());
@@ -127,16 +127,16 @@ namespace NanoTube
 			}
 			else if (t == typeof(Counter))
 			{
-				Counter counter = (Counter)metric;
+				ICounter counter = (ICounter)metric;
 				return string.Format(CultureInfo.InvariantCulture, "{0}:{1}|c", counter.Key, counter.Adjustment);
 			}
 			else if (t == typeof(Timing))
 			{
-				Timing timing = (Timing)metric;
+				ITiming timing = (ITiming)metric;
 				return string.Format(CultureInfo.InvariantCulture, "{0}:{1:0.###}|ms", timing.Key, timing.Duration);
 			}
 
-			Sample sample = (Sample)metric; //last option
+			ISample sample = (ISample)metric; //last option
 			return string.Format(CultureInfo.InvariantCulture, "{0}:{1:0.###}|c|@{2:f}", sample.Key, sample.Value, sample.Frequency);
 		}
 	}

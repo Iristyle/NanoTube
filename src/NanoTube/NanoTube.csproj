@@ -50,6 +50,10 @@
     <Compile Include="Configuration\IMetricPublishingConfiguration.cs" />
     <Compile Include="Configuration\MetricPublishingConfiguration.cs" />
     <Compile Include="Core\Counter.cs" />
+    <Compile Include="Core\ICounter.cs" />
+    <Compile Include="Core\IKeyValue.cs" />
+    <Compile Include="Core\ISample.cs" />
+    <Compile Include="Core\ITiming.cs" />
     <Compile Include="Core\KeyHelper.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -11,10 +11,10 @@ namespace NanoTube
 	/// <summary>	Performs some simple validation on given key values, and provides a method for sanitizing bad keys. </summary>
 	public static class KeyHelper
 	{
-		private const string _badChars = "! ;:/()\\#%$^*";
+		private const string _badChars = "! \0\t;:/\\#%$^*";
 		private readonly static SimpleObjectPool<StringBuilder> _builderPool 
 			= new SimpleObjectPool<StringBuilder>(1, pool => new StringBuilder(200));
-		private readonly static Regex _validKey = new Regex(@"^[^!\s;:/\.\(\)\\#%\$\^\*]+$", RegexOptions.Compiled);
+		private readonly static Regex _validKey = new Regex(@"^[^!\s;:/\\#%\$\^\*]+$", RegexOptions.Compiled);
 
 		/// <summary>	A string extension method that query if 'key' is valid key. </summary>
 		/// <param name="key">	The key to act on. </param>
@@ -30,6 +30,7 @@ namespace NanoTube
 		[SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0", Justification = "IsValidKey is validating key")]
 		public static string Sanitize(this string key)
 		{
+			if (null == key) { return string.Empty; }
 			if (IsValidKey(key)) { return key; }
 
 			StringBuilder sanitized = null;

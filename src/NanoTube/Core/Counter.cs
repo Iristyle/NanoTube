@@ -1,9 +1,8 @@
 namespace NanoTube.Core
 {
 	using System;
-
 	/// <summary>	Represents a Counter metric adjustment.  </summary>
-	public struct Counter : IMetric
+	internal struct Counter : ICounter
 	{
 		/// <summary>	Gets or sets the key name. </summary>
 		/// <value>	The key. </value>

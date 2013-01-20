@@ -22,5 +22,9 @@ namespace NanoTube.Configuration
 		/// <summary>	Gets the format to use. </summary>
 		/// <value>	The format. </value>
 		MetricFormat Format { get; }
+
+		/// <summary>	Gets a value indicating whether exceptions will be thrown from the internals. </summary>
+		/// <value>	true to throw exceptions, false if not. </value>
+		bool ThrowExceptions { get; }
 	}
 }

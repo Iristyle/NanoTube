@@ -3,7 +3,7 @@ namespace NanoTube.Core
 	using System;
 
 	/// <summary>	Represents a timing metric.  </summary>
-	public struct Timing : IMetric
+	internal struct Timing : ITiming
 	{
 		/// <summary>	Gets or sets the key name. </summary>
 		/// <value>	The key. </value>
