@@ -135,12 +135,17 @@
 
 				try
 				{
-					data.RemoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(_hostNameOrAddress)[0], _port);
+                    data.RemoteEndPoint = _ipBasedEndpoint ??
+                        //only DNS resolve if we were given a hostname
+                        new IPEndPoint(Dns.GetHostAddresses(_hostNameOrAddress)[0], _port);
 					data.SendPacketsElements = chunk
 						.Select(bytes => new SendPacketsElement(bytes, 0, bytes.Length, true))
 						.ToArray();
 
-					_client.Client.SendPacketsAsync(data);
+                    if (!_client.Client.Connected) {
+                        _client.Client.Connect(data.RemoteEndPoint);
+                    }
+                    _client.Client.SendPacketsAsync(data);
 
 					//Write-Debug "Wrote $(byteBlock.length) bytes to $server:$port"
 				}
