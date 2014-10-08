@@ -81,7 +81,7 @@ namespace NanoTube
 			{
 				//TODO: 1-19-2012 - this may be entirely wrong - we need to find a statsd to test against - eat timestamp
 				KeyValue keyValue = (KeyValue)metric;
-				return string.Format(CultureInfo.InvariantCulture, "{0}:{1:0.###}|ms", keyValue.Key, keyValue.Value);
+				return string.Format(CultureInfo.InvariantCulture, "{0}:{1:0.###}|g", keyValue.Key, keyValue.Value);
 			}
 			else if (t == typeof(Timing))
 			{
